@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://dancardin.github.io/sitemap.xml
