@@ -1,0 +1,50 @@
+{% import "header.html" as header %}
+{% import "footer.html" as footer %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if config.extra.author %}
+      <meta name="author" content="{{ config.extra.author }}">
+    {% endif %}
+    {% if config.extra.description %}
+      <meta name="description" content="{{ config.extra.description }}">
+    {% endif %}
+    {% if config.extra.description %}
+      <meta name="keywords" content="{{ config.extra.keywords }}">
+    {% endif %}
+
+    <title>{% block htmltitle %}{{ config.title }}{% endblock htmltitle %}</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="{{ get_url(path='style.css') }}">
+
+    {% if config.generate_rss %}
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path='rss.xml') }}">
+    {% endif %}
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      {{ header::header() }}
+
+      <div class="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+
+      {{ footer::footer() }}
+    </main>
+  </body>
+</html>

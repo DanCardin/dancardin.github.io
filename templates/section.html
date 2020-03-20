@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block htmltitle %}
+  {{ macros::title_or_last(component=section) }} - {{ config.title }}
+{% endblock htmltitle %}
+
+{% block title %}
+  {{ macros::title_or_last(component=section) }}
+{% endblock title %}
+
+{% block content %}
+  <section class="container list">
+    <h1 class="title">
+      {{ section.title }}
+    </h1>
+    {{ section.content | safe }}
+    <ul>
+      {% for page in section.pages %}
+        <li>
+          {% if page.date %}
+            {{ macros::format_date(date=page.date) }} --
+          {% endif %}
+          <a href="{{ page.permalink }}">
+            {{ macros::title_or_last(component=page, offset=0) }}
+          </a>
+          {% if page.extra.github %}
+            <a style="float: right" href="https://github.com/{{ page.extra.github }}" aria-label="repo">
+              &nbsp;
+              <i class="fab fa-github" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+          {% if page.extra.docs %}
+            <a style="float: right" href="{{ page.extra.docs }}" aria-label="docs">
+              &nbsp;
+              <i class="fa fa-book" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+          <section>
+            {% set url = "https://api.github.com/repos/" ~ page.extra.github %}
+            {% set project = load_data(url=url, format="json") %}
+
+            {{ project.description }}
+          </section>
+          <hr />
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endblock content %}

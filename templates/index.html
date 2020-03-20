@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="container centered">
+    <div class="about">
+      {% if config.extra.avatarurl %}
+        <div class="avatar"><img src="{{ config.extra.avatarurl }}" alt="avatar"></div>
+      {% endif %}
+      <h1>{{ config.extra.author }}</h1>
+      <h2>{{ config.extra.description }}</h2>
+      <ul>
+        {% for social in config.extra.social %}
+          <li>
+            <a
+              href="{{ social.url }}"
+              aria-label="{{ social.name }}"
+              {% if social.rel %}rel="{{ social.rel }}"{% endif %}
+              {% if social.target %}target="{{ social.target }}"{% endif %}
+              {% if social.type %}type="{{ social.type }}"{% endif %}
+            >
+              <i class="{{ social.icon }}" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endblock %}

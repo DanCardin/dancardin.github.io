@@ -1,0 +1,56 @@
+base_url = "https://dancardin.github.io"
+compile_sass = true
+build_search_index = true
+
+default_language = "en"
+
+highlight_code = true
+highlight_theme = "inspired-github"
+
+generate_rss = true
+
+[extra]
+author = "Dan Cardin"
+description = ""
+keywords = "software,dev,python,rust,blog"
+
+avatarurl = "avatar.png"
+paginate = 20
+show_reading_time = true
+show_word_count = true
+
+copyright = "2020"
+hide_copyright = false
+hide_credits = false
+
+[[extra.social]]
+  name = "Github"
+  icon = "fab fa-github fa-2x"
+  url = "https://github.com/dancardin/"
+
+[[extra.social]]
+  name = "PyPi"
+  icon = "fab fa-python fa-2x"
+  url = "https://pypi.org/user/DanCardin/"
+
+[[extra.social]]
+  name = "Reddit"
+  icon = "fab fa-reddit fa-2x"
+  url = "http://reddit.com/u/dancardin"
+
+[[extra.social]]
+  name = "Twitter"
+  icon = "fab fa-twitter fa-2x"
+  url = "https://twitter.com/dancardin2"
+
+[[extra.menus.main]]
+  name = "About"
+  url = "/about/"
+
+[[extra.menus.main]]
+  name = "Projects"
+  url  = "/projects/"
+
+[[extra.menus.main]]
+  name = "Blog"
+  url  = "/blog/"
