@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      <meta name="author" content="Dan Cardin">
+    
+    
+    
+
+    <title>
+    Sauce
+</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://dancardin.github.io/style.css">
+
+    
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      
+  <nav class="navigation">
+    <section class="container">
+      <a class="navigation-title" href="https:&#x2F;&#x2F;dancardin.github.io">
+        Dan Cardin
+      </a>
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/projects">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/content">Content</a>
+          </li>
+        
+
+        
+      </ul>
+    </section>
+  </nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+    <article>
+      <header>
+        
+  
+  
+
+  <h1>
+    <a href="https://github.com/dancardin&#x2F;sauce">Sauce</a>
+    <img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;701548?v=4" width="25", height="25">
+  </h1>
+
+  Context specific everything
+  <hr/>
+
+      </header>
+
+      
+
+      
+  
+
+  
+  
+
+  <h1 id="sauce">Sauce</h1>
+<p align="center">
+<img src="https://img.shields.io/crates/l/sauce.svg" alt="license">
+<a href="https://crates.io/crates/sauce">
+<img src="https://img.shields.io/crates/v/sauce.svg?colorB=319e8c" alt="Version info">
+</a>
+<a href="https://github.com/DanCardin/sauce/actions?query=workflow%3ATest">
+<img src="https://github.com/DanCardin/sauce/workflows/Test/badge.svg" alt="Build Status">
+</a> <a href="https://codecov.io/gh/DanCardin/sauce">
+<img src="https://codecov.io/gh/DanCardin/sauce/branch/main/graph/badge.svg?token=U7NQIWXWKW"/>
+</a><br>
+</p>
+<blockquote>
+<p>The central truth is the central truth, and nothing that I care about
+is relative</p>
+</blockquote>
+<p>A tool to help manage context/project specific shell-things like
+environment variables.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li>
+<p><a href="./doc">Docs</a></p>
+<ul>
+<li><a href="./doc/config.md">Configuration Reference</a></li>
+<li><a href="./doc/options.md">Flag and Subcommand Reference</a></li>
+<li><a href="./doc/comparison.md">Comparison to other tools
+(i.e. direnv/dotenv)</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#example-workflow">Example Workflow</a></p>
+</li>
+<li>
+<p><a href="#setup">Setup</a></p>
+<ul>
+<li><a href="#install">Install</a></li>
+<li><a href="#shell-hook">Shell Hook</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#targets">Targets</a></p>
+</li>
+<li>
+<p><a href="#features">Features</a></p>
+<ul>
+<li><a href="#sauce">sauce</a></li>
+<li><a href="#central-storage">Central Storage</a></li>
+<li><a href="#cascaded-loading">Cascaded Loading</a></li>
+<li><a href="#autoloading">Autoloading</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#local-development">Local Development</a></p>
+</li>
+</ul>
+<h2 id="example-workflow">Example Workflow</h2>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># Suppose you've got some directory structure
+❯ mkdir -p projects/foo
+❯ cd projects
+
+# In "projects", you want some shorthand for quickly pushing your branches
+❯ sauce new
+Created /Users/danc/.local/share/sauce/projects.toml
+
+❯ sauce set alias push='git push origin "$(git rev-parse --abbrev-ref HEAD)"'
+Setting push = git push origin "$(git rev-parse --abbrev-ref HEAD)"
+
+# Your project is, naturally, using 12-factor methodology, so you've got some
+# project specific environment variables you need to load!
+❯ cd foo
+❯ sauce set env foo=bar AWS_PROFILE=meow
+Setting foo = bar
+Setting AWS_PROFILE = meow
+
+# The core purpose!
+❯ sauce
+Sourced ~/.local/share/sauce/projects/foo.toml
+
+❯ env
+...
+AWS_PROFILE=meow
+foo=bar
+
+# Note the cascaded loading of upstream values!
+❯ push
+</code></pre>
+<h2 id="setup">Setup</h2>
+<h3 id="install">Install</h3>
+<h4 id="with-cargo">With Cargo</h4>
+<ul>
+<li><code>cargo install sauce</code></li>
+</ul>
+<h4 id="download-release">Download Release</h4>
+<ul>
+<li>Download Linux/Mac binary from
+<a href="https://github.com/DanCardin/sauce/releases">Releases</a></li>
+</ul>
+<h3 id="shell-hook">Shell Hook</h3>
+<p>Currently explicitly supported shells include: <code>zsh</code>, <code>bash</code>, and
+<code>fish</code>. The scaffolding exists to support other shells, which should
+make supporting other common shells that might require <code>&quot;$SHELL&quot;</code>
+specific behavior.</p>
+<p>Loading things into the environment requires a minimal amount of shell
+code to be executed, so after installing the binary (suggestion below),
+you will need to add add a hook to your bashrc/zshrc/config.fish, etc.</p>
+<ul>
+<li>bash <code>eval &quot;$(sauce --shell bash shell init)&quot;</code></li>
+<li>zsh <code>eval &quot;$(sauce --shell zsh shell init)&quot;</code></li>
+<li>fish <code>sauce --shell fish shell init | source</code></li>
+</ul>
+<p>Depending on the level of similarity to the above shells, you may be
+able to get away with using one of the above <code>shell init</code> hooks until
+explicit support is added</p>
+<h2 id="targets">Targets</h2>
+<p>A thing which <code>sauce</code> can load/unload is called a “target”.</p>
+<p>Currently supported targets include:</p>
+<ul>
+<li>
+<p>environment variables</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">sauce set env FOO=bar
+</code></pre>
+</li>
+<li>
+<p>aliases</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">sauce set alias g=git
+</code></pre>
+</li>
+<li>
+<p>functions</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">sauce set function add 'echo $(expr $1 + $2)'
+</code></pre>
+</li>
+</ul>
+<h2 id="features">Features</h2>
+<h3 id="sauce-command"><code>sauce</code> command</h3>
+<p>This is primary usecase is the <code>sauce</code> command, no subcommand, no
+arguments. This loads the current shell with all sauce targets (env
+vars, aliases, and function) which apply to the current directory.</p>
+<p>There are also a bunch of <a href="./doc/options.md">options</a> to allow you to
+customize the behavior of <code>sauce</code>, for example <code>sauce --glob DATABASE*</code>,
+<code>sauce --filter env:AWS_PROFILE</code>, or <code>sauce --path ~</code>.</p>
+<h3 id="central-storage">Central Storage</h3>
+<p>The original motivation for central storage was due to getting a new
+computer and needing to comb through ~50 repos to find all the random
+<code>.env</code> files and gitignored notes and whatnot littered all over the
+place to make sure nothing got left behind.</p>
+<p>However just generally, colocating the sauce data with the actual folder
+introduces a number of technical, security, and usability issues that
+are circumvented through central storage.</p>
+<h3 id="cascaded-loading">Cascaded loading</h3>
+<p>A key feature of <code>sauce</code> is that values are loaded in a cascading
+fashion relative to the home directory.</p>
+<p>This makes it easier to compose targets (env vars, aliases, and shell
+functions) among various locations, likely by utilizing the natural
+directory structure you might already have.</p>
+<p>Given a directory structure</p>
+<pre><code>~/
+  work/
+    project/
+      repo/
+      repo2/
+        src/
+    otherproject/
+</code></pre>
+<p>Support you run <code>sauce</code> at any folder level/depth, say
+<code>~/work/project/repo/</code>. The values saved for the folders: <code>~</code>, <code>~/work</code>,
+<code>~/work/project</code>, and <code>~/work/project/repo</code> will all be loaded.</p>
+<p>The more specific/deep folder’s values will take precedence over the
+values of more general/shallow folders.</p>
+<p>All saucefiles are located in the <code>$XDG_DATA_HOME/sauce</code> folder, after
+which the folder structure mirrors that of the folders who’s values are
+being tracked. Given the above example, if every folder had a saucefile,
+you might see:</p>
+<pre><code>~/.local/share/
+  sauce.toml
+  sauce/
+    project.toml
+    project/
+      repo.toml
+      repo2.toml
+      repo2/
+        src.toml
+    otherproject.toml
+</code></pre>
+<h3 id="autoloading">Autoloading</h3>
+<p>See the <a href="./doc/config.md">Configuration Reference</a> on <code>autoload-hook</code>
+and <code>autoload</code>.</p>
+<h2 id="local-development">Local development</h2>
+<p>For local development, it can be useful to enable the <code>--feature dev</code>.
+This alters the behavior so that the shell hook(s) point to the absolute
+location of the debug build.</p>
+<p>An example alias that might be helpful could be:</p>
+<pre data-lang="toml" class="language-toml "><code class="language-toml" data-lang="toml">[alias]
+build = 'cargo build --features dev && eval "$(./target/debug/sauce shell init)"'
+</code></pre>
+<p>At which point, you’re a quick <code>build</code> away from being able to <code>cd</code>
+around to test <code>sauce</code>, while always pointing at your project version of
+<code>sauce</code> for the current shell.</p>
+
+
+    </article>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        © 2020
+        
+          Dan Cardin
+        
+      
+    </section>
+  </footer>
+
+    </main>
+  </body>
+</html>

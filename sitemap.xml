@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://dancardin.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/content/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/configly/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/htmxl/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/limonite/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/pytest-alembic/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/pytest-mock-resources/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/sauce/</loc>
+    </url>
+    <url>
+        <loc>https://dancardin.github.io/projects/sqlalchemy-model-factory/</loc>
+    </url>
+</urlset>

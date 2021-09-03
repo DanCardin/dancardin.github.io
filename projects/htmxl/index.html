@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      <meta name="author" content="Dan Cardin">
+    
+    
+    
+
+    <title>
+    HTM(x)L
+</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://dancardin.github.io/style.css">
+
+    
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      
+  <nav class="navigation">
+    <section class="container">
+      <a class="navigation-title" href="https:&#x2F;&#x2F;dancardin.github.io">
+        Dan Cardin
+      </a>
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/projects">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/content">Content</a>
+          </li>
+        
+
+        
+      </ul>
+    </section>
+  </nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+    <article>
+      <header>
+        
+  
+  
+
+  <h1>
+    <a href="https://github.com/schireson&#x2F;htmxl">HTM(x)L</a>
+    <img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;28869722?v=4" width="25", height="25">
+  </h1>
+
+  A toolkit for reading and writing excel files
+  <hr/>
+
+      </header>
+
+      
+
+      
+  
+
+  
+  
+
+  <p><img src="https://img.shields.io/circleci/build/gh/schireson/htmxl/master" alt="CircleCI" /> <a href="https://coveralls.io/github/schireson/htmxl?branch=master"><img src="https://coveralls.io/repos/github/schireson/htmxl/badge.svg?branch=master" alt="Coverage Status" /></a>
+<a href="https://htmxl.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/htmxl/badge/?version=latest" alt="Documentation" /></a></p>
+<h2 id="introduction">Introduction</h2>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from htmxl.compose import Workbook
+
+workbook = Workbook()
+workbook.add_sheet_from_template(
+    template="""
+    <head>{{ title }}</head>
+    <body>
+      <div>
+        Hello down there, {{ name }}!
+      </div>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              {% for column_name in column_names %}
+                <th>{{ column_name }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+              <tr>
+                <td>{{ row.a }}</td>
+                <td>{{ row.b }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table
+      </div>
+    </body>
+    """,
+    data=dict(
+        title="Hello World",
+        name='Bob',
+        column_names=['A', 'B'],
+        rows=[{'a': 'a', 'b': 2}, {'a': 'b', 'b': 2}, {'a': 'c', 'b': 3}],
+    )
+)
+
+workbook.compose('hello_world.xlsx')
+</code></pre>
+<p><img src="https://github.com/schireson/htmxl/blob/main/docs/_static/readme.png" alt="example" /></p>
+<h2 id="the-pitch">The Pitch</h2>
+<p>Essentially, HTM(x)L is an attempt to allow the declaration of Excel files in a (mostly) declarative
+manner that separates the format that the document should take from the data being added to it.</p>
+<p>The &quot;normal&quot; manner of producing Excel files essentially amounts to a series of imperitive
+statements about what cells to modify to get the excel file you want. For any file of moderate
+complexity, this leads to there being very little intuition about what the resulting Excel file will
+actually look like.</p>
+<p>Particularly once you start adding cell styling, or finding yourself inserting dynamically-sized
+data (requiring a bunch of cell offset math), the relative ease of designing and visualizing the
+template using a familiar idiom, HTML, can be make it much much easier to author and maintain these
+kinds of templates.</p>
+<h2 id="features">Features</h2>
+<p>General features include:</p>
+<ul>
+<li>
+<p>HTML elements as metaphors for structures in the resulting Excel document</p>
+<p>Due to the obviously grid-oriented structure of Excel, the metaphors <strong>can</strong> sometimes be
+approximate, but should hopefully make intuitive sense!</p>
+<p>For example:</p>
+<ul>
+<li><code>&lt;span&gt;</code>: An inline-block element which pushes elements after it to the right</li>
+<li><code>&lt;div&gt;</code>: An block element which push elements after it downward</li>
+<li><code>&lt;table&gt;</code>: Self-explanatory!</li>
+</ul>
+<p>See the documentation about
+<a href="https://htmxl.readthedocs.io/en/latest/design/elements.html">elements</a> for more details</p>
+</li>
+<li>
+<p>Styling</p>
+<p>Some commonly/obviously useful and style options like width/height (<code>style=&quot;width: 50px&quot;</code>) or
+rowspan/colspan <code>colspan=&quot;2&quot;</code> have been implemented, but there's no reason that various different
+options that make intuitive sense (like colors) could be implemented also</p>
+<p>See the documentation about <a href="https://htmxl.readthedocs.io/en/latest/design/styling.html">styling</a>
+for more details</p>
+</li>
+<li>
+<p>Classes</p>
+<p>While inline color styles are not (yet) implemented, one can supply classes normally,
+<code>class=&quot;class1 class2&quot;</code> and supply the definitions for those classes as inputs to the Workbook</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">styles = [
+    {"name": "odd", "pattern_fill": {"patternType": "solid", "fgColor": "FBEAFB"}},
+]
+Workbook(styles=styles)
+</code></pre>
+</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>There is no default parser (for HTML) included with a default installation of the package. We do
+this for both backwards compatibility and future compatibility reasons.</p>
+<p>In order to keep the base package lean when one opts to use one or the other parser, we include a
+set of bundled parser-adaptor implementations for known supported parser libraries</p>
+<p>To opt into the installation of the dependent library for the parser you chose:</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># Slower, but more permissive
+pip install htmxl[beautifulsoup]
+
+# Faster, but more strict
+pip install htmxl[lxml]
+</code></pre>
+<p>By default, the package will detect installed parser libraries and choose the first one we find, so
+a vanilla <code>Workbook()</code> instantiation should Just Work.</p>
+<p>However, we encourage users to explicitly select their parser to avoid inadvertant selection of the
+&quot;wrong&quot; parser at runtime (given that they have <a href="https://pytest-mock-resources.readthedocs.io/en/latest/compatbility.html">template compatibility
+issues</a>)</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from htmxl.compose import Workbook
+
+workbook = Workbook(parser='beautifulsoup')
+workbook = Workbook(parser='lxml')
+</code></pre>
+
+
+    </article>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        © 2020
+        
+          Dan Cardin
+        
+      
+    </section>
+  </footer>
+
+    </main>
+  </body>
+</html>

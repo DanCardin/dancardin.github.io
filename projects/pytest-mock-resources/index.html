@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      <meta name="author" content="Dan Cardin">
+    
+    
+    
+
+    <title>
+    Pytest Mock Resources
+</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://dancardin.github.io/style.css">
+
+    
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      
+  <nav class="navigation">
+    <section class="container">
+      <a class="navigation-title" href="https:&#x2F;&#x2F;dancardin.github.io">
+        Dan Cardin
+      </a>
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/projects">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/content">Content</a>
+          </li>
+        
+
+        
+      </ul>
+    </section>
+  </nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+    <article>
+      <header>
+        
+  
+  
+
+  <h1>
+    <a href="https://github.com/schireson&#x2F;pytest-mock-resources">Pytest Mock Resources</a>
+    <img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;28869722?v=4" width="25", height="25">
+  </h1>
+
+  Pytest Fixtures that let you actually test against external resource (Postgres, Mongo, Redshift...) dependent code.
+  <hr/>
+
+      </header>
+
+      
+
+      
+  
+
+  
+  
+
+  <p><img src="https://img.shields.io/circleci/build/gh/schireson/pytest-mock-resources/master" alt="CircleCI" />
+<a href="https://codecov.io/gh/schireson/pytest-mock-resources"><img src="https://codecov.io/gh/schireson/pytest-mock-resources/branch/master/graph/badge.svg" alt="codecov" /></a>
+<a href="https://pytest-mock-resources.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/pytest-mock-resources/badge/?version=latest" alt="Documentation Status" /></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>Code which depends on external resources such a databases (postgres, redshift, etc) can be difficult
+to write automated tests for. Conventional wisdom might be to mock or stub out the actual database
+calls and assert that the code works correctly before/after the calls.</p>
+<p>However take the following, <em>simple</em> example:</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">def serialize(users):
+    return [
+        {
+            'user': user.serialize(),
+            'address': user.address.serialize(),
+            'purchases': [p.serialize() for p in user.purchases],
+        }
+        for user in users
+    ]
+
+def view_function(session):
+    users = session.query(User).join(Address).options(selectinload(User.purchases)).all()
+    return serialize(users)
+</code></pre>
+<p>Sure, you can test <code>serialize</code>, but whether the actual <strong>query</strong> did the correct thing <em>truly</em>
+requires that you execute the query.</p>
+<h2 id="the-pitch">The Pitch</h2>
+<p>Having tests depend upon a <strong>real</strong> postgres instance running somewhere is a pain, very fragile, and
+prone to issues across machines and test failures.</p>
+<p>Therefore <code>pytest-mock-resources</code> (primarily) works by managing the lifecycle of docker containers
+and providing access to them inside your tests.</p>
+<p>As such, this package makes 2 primary assumptions:</p>
+<ul>
+<li>You're using <code>pytest</code> (hopefully that's appropriate, given the package name)</li>
+<li>For many resources, <code>docker</code> is required to be available and running (or accessible through remote
+docker).</li>
+</ul>
+<p>If you aren't familiar with Pytest Fixtures, you can read up on them in the <a href="https://docs.pytest.org/en/latest/fixture.html">Pytest
+documentation</a>.</p>
+<p>In the above example, your test file could look something like</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_postgres_fixture
+from models import ModelBase
+
+pg = create_postgres_fixture(ModelBase, session=True)
+
+def test_view_function_empty_db(pg):
+  response = view_function(pg)
+  assert response == ...
+
+def test_view_function_user_without_purchases(pg):
+  pg.add(User(...))
+  pg.flush()
+
+  response = view_function(pg)
+  assert response == ...
+
+def test_view_function_user_with_purchases(pg):
+  pg.add(User(..., purchases=[Purchase(...)]))
+  pg.flush()
+
+  response = view_function(pg)
+  assert response == ...
+</code></pre>
+<h2 id="existing-resources-many-more-possible">Existing Resources (many more possible)</h2>
+<ul>
+<li>
+<p>SQLite</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_sqlite_fixture
+</code></pre>
+</li>
+<li>
+<p>Postgres</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_postgres_fixture
+</code></pre>
+</li>
+<li>
+<p>Redshift</p>
+<p><strong>note</strong> Uses postgres under the hood, but the fixture tries to support as much redshift
+functionality as possible (including redshift's <code>COPY</code>/<code>UNLOAD</code> commands).</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_redshift_fixture
+</code></pre>
+</li>
+<li>
+<p>Mongo</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_mongo_fixture
+</code></pre>
+</li>
+<li>
+<p>Redis</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_redis_fixture
+</code></pre>
+</li>
+<li>
+<p>MySQL</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">from pytest_mock_resources import create_mysql_fixture
+</code></pre>
+</li>
+</ul>
+<h2 id="features">Features</h2>
+<p>General features include:</p>
+<ul>
+<li>Support for &quot;actions&quot; which pre-populate the resource you're mocking before the test</li>
+<li><a href="https://pytest-mock-resources.readthedocs.io/en/latest/async.html">Async fixtures</a></li>
+<li>Custom configuration for container/resource startup</li>
+</ul>
+<h2 id="installing">Installing</h2>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># Basic fixture support
+pip install "pytest-mock-resources"
+
+# For postgres install EITHER of the following:
+pip install "pytest-mock-resources[postgres-binary]"
+pip install "pytest-mock-resources[postgres]"
+
+# For postgres async
+pip install "pytest-mock-resources[postgres-async]"
+
+# For redshift install EITHER of the following:
+# (redshift fixtures require postgres dependencies...)
+pip install "pytest-mock-resources[postgres, redshift]"
+pip install "pytest-mock-resources[postgres-binary, redshift]"
+
+# For mongo install the following:
+pip install "pytest-mock-resources[mongo]"
+
+# For redis
+pip install "pytest-mock-resources[redis]"
+
+# For mysql
+pip install "pytest-mock-resources[mysql]"
+</code></pre>
+<h2 id="possible-future-resources">Possible Future Resources</h2>
+<ul>
+<li>Rabbit Broker</li>
+<li>AWS Presto</li>
+</ul>
+<p>Feel free to file an <a href="https://github.com/schireson/pytest-mock-resources/issues">issue</a> if you find
+any bugs or want to start a conversation around a mock resource you want implemented!</p>
+<h2 id="python-2">Python 2</h2>
+<p>Releases in the 1.x series were supportive of python 2. However starting from 2.0.0, support for
+python 2 was dropped. We may accept bugfix PRs for the 1.x series, however new development and
+features will not be backported.</p>
+
+
+    </article>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        © 2020
+        
+          Dan Cardin
+        
+      
+    </section>
+  </footer>
+
+    </main>
+  </body>
+</html>

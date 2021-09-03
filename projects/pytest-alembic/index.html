@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      <meta name="author" content="Dan Cardin">
+    
+    
+    
+
+    <title>
+    Pytest Alembic
+</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://dancardin.github.io/style.css">
+
+    
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      
+  <nav class="navigation">
+    <section class="container">
+      <a class="navigation-title" href="https:&#x2F;&#x2F;dancardin.github.io">
+        Dan Cardin
+      </a>
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/projects">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/content">Content</a>
+          </li>
+        
+
+        
+      </ul>
+    </section>
+  </nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+    <article>
+      <header>
+        
+  
+  
+
+  <h1>
+    <a href="https://github.com/schireson&#x2F;pytest-alembic">Pytest Alembic</a>
+    <img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;28869722?v=4" width="25", height="25">
+  </h1>
+
+  Pytest plugin to test alembic migrations (with default tests) and which enables you to write tests specific to your migrations.
+  <hr/>
+
+      </header>
+
+      
+
+      
+  
+
+  
+  
+
+  <p><img src="https://img.shields.io/circleci/build/gh/schireson/pytest-alembic/master" alt="CircleCI" />
+<a href="https://codecov.io/gh/schireson/pytest-alembic"><img src="https://codecov.io/gh/schireson/pytest-alembic/branch/master/graph/badge.svg" alt="codecov" /></a>
+<a href="https://pytest-alembic.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/pytest-alembic/badge/?version=latest" alt="Documentation Status" /></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>A pytest plugin to test alembic migrations (with default tests) and
+which enables you to write tests specific to your migrations.</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">$ pip install pytest-alembic
+$ pytest --test-alembic
+
+...
+::pytest_alembic/tests/model_definitions_match_ddl <- . PASSED           [ 25%]
+::pytest_alembic/tests/single_head_revision <- . PASSED                  [ 50%]
+::pytest_alembic/tests/up_down_consistency <- . PASSED                   [ 75%]
+::pytest_alembic/tests/upgrade <- . PASSED                               [100%]
+
+============================== 4 passed in 2.32s ===============================
+</code></pre>
+<h2 id="the-pitch">The pitch</h2>
+<p>Have you ever merged a change to your models and you forgot to generate
+a migration?</p>
+<p>Have you ever written a migration only to realize that it fails when
+there’s data in the table?</p>
+<p>Have you ever written a <strong>perfect</strong> migration only to merge it and later
+find out that someone else merged also merged a migration and your CD is
+now broken!?</p>
+<p><code>pytest-alembic</code> is meant to (with a little help) solve all these
+problems and more. Note, due to a few different factors, there <strong>may</strong>
+be some <a href="http://pytest-alembic.readthedocs.io/en/latest/setup.html">minimal required
+setup</a>;
+however most of it is boilerplate akin to the setup required for alembic
+itself.</p>
+<h3 id="built-in-tests">Built-in Tests</h3>
+<ul>
+<li>
+<p><strong>test_single_head_revision</strong></p>
+<p>Assert that there only exists one head revision.</p>
+<p>We’re not sure what realistic scenario involves a diverging history to
+be desirable. We have only seen it be the result of uncaught merge
+conflicts resulting in a diverged history, which lazily breaks during
+deployment.</p>
+</li>
+<li>
+<p><strong>test_upgrade</strong></p>
+<p>Assert that the revision history can be run through from base to head.</p>
+</li>
+<li>
+<p><strong>test_model_definitions_match_ddl</strong></p>
+<p>Assert that the state of the migrations matches the state of the
+models describing the DDL.</p>
+<p>In general, the set of migrations in the history should coalesce into
+DDL which is described by the current set of models. Therefore, a call
+to <code>revision --autogenerate</code> should always generate an empty migration
+(e.g. find no difference between your database (i.e. migrations
+history) and your models).</p>
+</li>
+<li>
+<p><strong>test_up_down_consistency</strong></p>
+<p>Assert that all downgrades succeed.</p>
+<p>While downgrading may not be lossless operation data-wise, there’s a
+theory of database migrations that says that the revisions in
+existence for a database should be able to go from an entirely blank
+schema to the finished product, and back again.</p>
+</li>
+</ul>
+<p>Let us know if you have any ideas for more built-in tests which would be
+generally useful for most alembic histories!</p>
+<h3 id="custom-tests">Custom Tests</h3>
+<p>For more information, see the docs for <a href="http://pytest-alembic.readthedocs.io/en/latest/custom_tests.html">custom
+tests</a>
+(example below) or <a href="http://pytest-alembic.readthedocs.io/en/latest/custom_data.html">custom static
+data</a>
+(to be inserted automatically before a given revision).</p>
+<p>Sometimes when writing a particularly knarly data migration, it helps to
+be able to practice a little timely TDD, since there’s always the
+potential you’ll trash your actual production data.</p>
+<p>With <code>pytest-alembic</code>, you can write tests directly, in the same way
+that you would normally, through the use of the <code>alembic_runner</code>
+fixture.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">def test_knarly_migration_xyz123(alembic_engine, alembic_runner):
+    # Migrate up to, but not including this new migration
+    alembic_runner.migrate_up_before('xyz123')
+
+    # Perform some very specific data setup, because this migration is sooooo complex.
+    # ...
+    alembic_engine.execute(table.insert(id=1, name='foo'))
+
+    alembic_runner.migrate_up_one()
+</code></pre>
+<p><code>alembic_runner</code> has a number of methods designed to make it convenient
+to change the state of your database up, down, and all around.</p>
+<h2 id="installing">Installing</h2>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">pip install "pytest-alembic"
+</code></pre>
+
+
+    </article>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        © 2020
+        
+          Dan Cardin
+        
+      
+    </section>
+  </footer>
+
+    </main>
+  </body>
+</html>

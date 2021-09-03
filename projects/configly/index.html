@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      <meta name="author" content="Dan Cardin">
+    
+    
+    
+
+    <title>
+    Configly
+</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+    <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://dancardin.github.io/style.css">
+
+    
+  </head>
+
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      
+  <nav class="navigation">
+    <section class="container">
+      <a class="navigation-title" href="https:&#x2F;&#x2F;dancardin.github.io">
+        Dan Cardin
+      </a>
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/projects">Projects</a>
+          </li>
+        
+          <li class="navigation-item">
+              <a class="navigation-link" href="https://dancardin.github.io/content">Content</a>
+          </li>
+        
+
+        
+      </ul>
+    </section>
+  </nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+    <article>
+      <header>
+        
+  
+  
+
+  <h1>
+    <a href="https://github.com/schireson&#x2F;configly">Configly</a>
+    <img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;28869722?v=4" width="25", height="25">
+  </h1>
+
+  Simplify and centralize the loading of configuration, such as environment variables.
+  <hr/>
+
+      </header>
+
+      
+
+      
+  
+
+  
+  
+
+  <p><img src="https://img.shields.io/circleci/build/gh/schireson/configly/master" alt="CircleCI" /> <a href="https://codecov.io/gh/schireson/configly"><img src="https://codecov.io/gh/schireson/configly/branch/master/graph/badge.svg" alt="codecov" /></a> <a href="https://configly.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/configly/badge/?version=latest" alt="Documentation Status" /></a></p>
+<h2 id="tl-dr">TL;DR</h2>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml"># config.yml
+foo:
+    bar: <% ENV[REQUIRED] %>
+    baz: <% ENV[OPTIONAL, true] %>
+list_of_stuff:
+    - fun<% ENV[NICE, dament] %>al
+    - fun<% ENV[AGH, er] %>al
+</code></pre>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># app.py
+config = Config.from_yaml('config.yml')
+
+print(config.foo.bar)
+print(config.foo['baz'])
+for item in config.list_of_stuff:
+    print(item)
+</code></pre>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">pip install configly[yaml]
+</code></pre>
+<h2 id="introduction">Introduction</h2>
+<p>Loading configuration is done in every (application) project, and yet it is often
+overlooked and condidered too easy or straightforward to bother using a library
+to manage doing it.</p>
+<p>Therefore, we often see code like this:</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># config.py
+import os
+
+# Maybe it's following 12factor and loading all the config from the environment.
+config = {
+    'log_level': os.getenv('LOG_LEVEL'),
+    'database': {
+        # At least here, I can nest values if I want to organize things.
+        'password': os.environ['DATABASE_PASSWORD'],
+        'port': int(os.environ['DATABASE_PORT']),
+    }
+}
+</code></pre>
+<p>or this</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># config.py
+import os
+
+class Config:
+    log_level = os.getenv('LOG_LEVEL')
+
+    # Here it's not so easy to namespace
+    database_password = os.environ['DATABASE_PASSWORD']
+    database_port = int(os.environ['DATABASE_PORT'])
+
+
+# Oh goodness!
+class DevConfig(Config):
+    environment = 'dev'
+</code></pre>
+<p>or this</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">import configparser
+# ...🤢... Okay I dont even want to get into this one.
+</code></pre>
+<p>And this is all assuming that everyone is loading configuration at the outermost entrypoint!
+The two worst possible outcomes in configuration are:</p>
+<ul>
+<li>You are loading configuration lazily and/or deeply within your application, such that it
+hits a critical failure after having seemingly successfully started up.</li>
+<li>There is not a singular location at which you can go to see all configuration your app might
+possibly be reading from.</li>
+</ul>
+<h2 id="the-pitch">The pitch</h2>
+<p><code>Configly</code> asserts configuration should:</p>
+<ul>
+<li>Be centralized
+<ul>
+<li>One should be able to look at one file to see all (env vars, files, etc) which must exist for the
+application to function.</li>
+</ul>
+</li>
+<li>Be comprehensive
+<ul>
+<li>One should not find configuration being loaded secretly elsewhere</li>
+</ul>
+</li>
+<li>Be declarative/static
+<ul>
+<li>code-execution (e.g. the class above) in the definition of the config inevitably makes it
+hard to interpret, as the config becomes more complex.</li>
+</ul>
+</li>
+<li>Be namespacable
+<ul>
+<li>One should not have to prepend <code>foo_</code> namespaces to all <code>foo</code> related config names</li>
+</ul>
+</li>
+<li>Be loaded, once, at app startup
+<ul>
+<li>(At least the <em>definition</em> of the configuration you're loading)</li>
+</ul>
+</li>
+<li>(Ideally) have structured output
+<ul>
+<li>If something is an <code>int</code>, ideally it would be read as an int.</li>
+</ul>
+</li>
+</ul>
+<p>To that end, the <code>configly.Config</code> class exposes a series of classmethods from which your config
+can be loaded. It's largely unimportant what the input format is, but we started with formats
+that deserialize into at least <code>str</code>, <code>float</code>, <code>int</code>, <code>bool</code> and <code>None</code> types.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># Currently supported input formats.
+config = Config.from_yaml('config.yml')
+config = Config.from_json('config.json')
+config = Config.from_toml('config.toml')
+</code></pre>
+<p>Given an input <code>config.yml</code> file:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml"># config.yml
+foo:
+    bar: <% ENV[REQUIRED] %>
+    baz: <% ENV[OPTIONAL, true] %>
+list_of_stuff:
+    - fun<% ENV[NICE, dament] %>al
+    - fun<% ENV[AGH, er] %>al
+</code></pre>
+<p>A couple of things jump out:</p>
+<ul>
+<li>Most importantly, whatever the configuration value is, it's intreted as a literal value in the
+format of the file which loads it. I.E. loading <code>&quot;true&quot;</code> from the evironment in a yaml file
+will yield a python <code>True</code>. Ditto <code>&quot;1&quot;</code>, or <code>&quot;null&quot;</code>.</li>
+<li>Each <code>&lt;% ... %&gt;</code> section indicates a variable</li>
+<li><code>ENV</code> is an &quot;interpolator&quot; which knows how to obtain environment variables</li>
+<li><code>[VAR]</code> Will raise an error if that piece of config is not found</li>
+<li><code>[VAR, true]</code> Will <code>VAR</code> to the value after the comma</li>
+<li>The interpolation can be a sub-portion of a key (<code>fun&lt;% ENV[NICE, dament] %&gt;al</code> interpolates
+to &quot;fundamental&quot;). Another example being <code>'&lt;% ENV[X, 3] %&gt;'</code> interpolates to <code>'1'</code> instead of <code>1</code></li>
+</ul>
+<p>Now that you've loaded the above configuration:</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># app.py
+config = Config.from_yaml('config.yml')
+
+# You can access namespaced config using dot access
+print(config.foo.bar)
+
+# You have use index syntax for dynamic, or non-attribute-safe key values.
+print(config.foo['baz'])
+
+# You can iterate over lists
+for item in config.list_of_stuff:
+    print(item)
+
+# You can *generally* treat key-value maps as dicts
+for key, value in config.foo.items():
+    print(key, value)
+
+# You can *actually* turn key-value maps into dicts
+dict(config.foo) == config.foo.to_dict()
+</code></pre>
+<h2 id="installing">Installing</h2>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># Basic installation
+pip install configly
+
+# To use the yaml config loader
+pip install configly[yaml]
+
+# To use the toml config loader
+pip install configly[toml]
+
+# To use the vault config loader
+pip install configly[vault]
+</code></pre>
+
+
+    </article>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        © 2020
+        
+          Dan Cardin
+        
+      
+    </section>
+  </footer>
+
+    </main>
+  </body>
+</html>
