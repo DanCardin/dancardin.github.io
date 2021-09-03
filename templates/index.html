@@ -3,11 +3,6 @@
 {% block content %}
   <section class="container centered">
     <div class="about">
-      {% if config.extra.avatarurl %}
-        <div class="avatar"><img src="{{ config.extra.avatarurl }}" alt="avatar"></div>
-      {% endif %}
-      <h1>{{ config.extra.author }}</h1>
-      <h2>{{ config.extra.description }}</h2>
       <ul>
         {% for social in config.extra.social %}
           <li>

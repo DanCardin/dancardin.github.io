@@ -18,7 +18,7 @@
     {{ section.content | safe }}
     <ul>
       {% for page in section.pages %}
-        <li>
+        <li style="margin-bottom: 2rem">
           {% if page.date %}
             {{ macros::format_date(date=page.date) }} --
           {% endif %}
@@ -43,7 +43,6 @@
 
             {{ project.description }}
           </section>
-          <hr />
         </li>
       {% endfor %}
     </ul>

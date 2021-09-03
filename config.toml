@@ -12,16 +12,14 @@ generate_rss = true
 [extra]
 author = "Dan Cardin"
 description = ""
-keywords = "software,dev,python,rust,blog"
+keywords = "software,dev,python,rust"
 
-avatarurl = "avatar.png"
 paginate = 20
 show_reading_time = true
 show_word_count = true
 
 copyright = "2020"
 hide_copyright = false
-hide_credits = false
 
 [[extra.social]]
   name = "Github"
@@ -38,19 +36,10 @@ hide_credits = false
   icon = "fab fa-reddit fa-2x"
   url = "http://reddit.com/u/dancardin"
 
-[[extra.social]]
-  name = "Twitter"
-  icon = "fab fa-twitter fa-2x"
-  url = "https://twitter.com/dancardin2"
-
-[[extra.menus.main]]
-  name = "About"
-  url = "/about/"
-
 [[extra.menus.main]]
   name = "Projects"
   url  = "/projects/"
 
 [[extra.menus.main]]
-  name = "Blog"
-  url  = "/blog/"
+  name = "Content"
+  url  = "/content/"

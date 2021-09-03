@@ -1,6 +1,6 @@
 +++
 title = "SQLAlchemy Model Factory"
-weight = 1
+weight = 3
 template = "project.html"
 
 [extra]

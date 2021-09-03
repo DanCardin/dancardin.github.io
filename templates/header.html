@@ -1,11 +1,9 @@
 {% macro header() %}
   <nav class="navigation">
     <section class="container">
-      {% if page.title %}
-        <a class="navigation-title" href="{{ config.base_url }}">
-          {{ config.extra.author }}
-        </a>
-      {% endif %}
+      <a class="navigation-title" href="{{ config.base_url }}">
+        {{ config.extra.author }}
+      </a>
       <label class="menu-button float-right" for="menu-toggle">
         <i class="fas fa-bars"></i>
       </label>
