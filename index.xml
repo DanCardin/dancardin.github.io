@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Dan Cardin</title>
+    <link>https://dancardin.github.io/</link>
+    <description>Recent content on Dan Cardin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 01 Dec 2022 09:05:32 -0500</lastBuildDate><atom:link href="https://dancardin.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SQLAlchemy Declarative Extensions</title>
+      <link>https://dancardin.github.io/projects/sqlalchemy-declarative-extensions/</link>
+      <pubDate>Thu, 01 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/sqlalchemy-declarative-extensions/</guid>
+      <description>A python library for adding extensions to SqlAlchemy (and/or Alembic) which allows declaratively stating the existence of additional kinds of objects about your database not natively supported by SqlAlchemy/Alembic.
+@declarative_database @as_declarative class Base: schemas = Schemas().are(&amp;#34;example&amp;#34;) roles = Roles(ignore_unspecified=True).are( Role(&amp;#34;read&amp;#34;, login=False), Role( &amp;#34;app&amp;#34;, in_roles=[&amp;#39;read&amp;#39;] ), ) grants = Grants().are( DefaultGrant.on_tables_in_schema(&amp;#34;public&amp;#34;, &amp;#39;example&amp;#39;).grant(&amp;#34;select&amp;#34;, to=&amp;#34;read&amp;#34;), DefaultGrant.on_tables_in_schema(&amp;#34;public&amp;#34;).grant(&amp;#34;insert&amp;#34;, &amp;#34;update&amp;#34;, &amp;#34;delete&amp;#34;, to=&amp;#34;write&amp;#34;), DefaultGrant.on_sequences_in_schema(&amp;#34;public&amp;#34;).grant(&amp;#34;usage&amp;#34;, to=&amp;#34;write&amp;#34;), ) rows = Rows().are( Row(&amp;#39;foo&amp;#39;, id=1), ) views = Views().are(View(&amp;#34;low_foo&amp;#34;, &amp;#34;select * from foo where i &amp;lt; 10&amp;#34;)) class Foo(Base): __tablename__ = &amp;#39;foo&amp;#39; id = Column(types.</description>
+    </item>
+    
+    <item>
+      <title>Pytest Alembic</title>
+      <link>https://dancardin.github.io/projects/pytest-alembic/</link>
+      <pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/pytest-alembic/</guid>
+      <description>A Pytest plugin to test alembic migrations (with default tests) and which enables you to write tests specific to your migrations.
+$ pip install pytest-alembic $ pytest --test-alembic ... ::pytest_alembic/tests/model_definitions_match_ddl &amp;lt;- . PASSED [ 25%] ::pytest_alembic/tests/single_head_revision &amp;lt;- . PASSED [ 50%] ::pytest_alembic/tests/up_down_consistency &amp;lt;- . PASSED [ 75%] ::pytest_alembic/tests/upgrade &amp;lt;- . PASSED [100%] ============================== 4 passed in 2.32s =============================== </description>
+    </item>
+    
+    <item>
+      <title>Pytest Mock Resources</title>
+      <link>https://dancardin.github.io/projects/pytest-mock-resources/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/pytest-mock-resources/</guid>
+      <description>A python library which produces pytest fixtures which let you test against external resource (Postgres, Mongo, Redshift&amp;hellip;) dependent code, by orchestrating running real instances of those services.
+from pytest_mock_resources import create_postgres_fixture from models import ModelBase pg = create_postgres_fixture(ModelBase, session=True) def test_view_function_empty_db(pg): response = view_function(pg) assert response == ... </description>
+    </item>
+    
+    <item>
+      <title>Sauce</title>
+      <link>https://dancardin.github.io/projects/sauce/</link>
+      <pubDate>Sat, 23 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/sauce/</guid>
+      <description>A tool to help manage context/project specific shell-things like environment variables.
+# Suppose you&amp;#39;ve got some directory structure ❯ mkdir -p projects/foo ❯ cd projects # In &amp;#34;projects&amp;#34;, you want some shorthand for quickly pushing your branches ❯ sauce new Created /Users/danc/.local/share/sauce/projects.toml ❯ sauce set alias push=&amp;#39;git push origin &amp;#34;$(git rev-parse --abbrev-ref HEAD)&amp;#34;&amp;#39; Setting push = git push origin &amp;#34;$(git rev-parse --abbrev-ref HEAD)&amp;#34; # Your project is, naturally, using 12-factor methodology, so you&amp;#39;ve got some # project specific environment variables you need to load!</description>
+    </item>
+    
+    <item>
+      <title>Databudgie</title>
+      <link>https://dancardin.github.io/projects/databudgie/</link>
+      <pubDate>Thu, 10 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/databudgie/</guid>
+      <description>Databudgie is a CLI &amp;amp; library for database performing targeted backup and restore of database tables or arbitrary queries against database tables.
+Some minimal config might look like:
+# config.databudgie.yml backup: url: postgresql://postgres:postgres@localhost:5432/postgres restore: url: postgresql://postgres:postgres@localhost:5432/postgres tables: - some_schema.* - author - book - name: chapter query: &amp;#34;select * from {table} where book_id &amp;gt; 4&amp;#34; - name: some_table follow_foreign_keys: true Think pg_dump, but more flexible and easy to produce backups for a targeted set of tables/data, and restore them.</description>
+    </item>
+    
+    <item>
+      <title>SQLAlchemy Model Factory</title>
+      <link>https://dancardin.github.io/projects/sqlalchemy-model-factory/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/sqlalchemy-model-factory/</guid>
+      <description>A python library which makes it easy to write factory functions for sqlalchemy models, particularly for use in testing.
+The most obvious comparison is against the much more popular python library, FactoryBoy. By comparison, SQLAlchemy Model Factory removes a lot of the magic and machinery introduced by factory boy.
+One essentially writes regular functions, (which are directly callable as functions!), which when called through the &amp;ldquo;ModelFactory&amp;rdquo; (mf by default) fixture, automatically produces those objects in the database, similarly to FactoryBoy.</description>
+    </item>
+    
+    <item>
+      <title>Configly</title>
+      <link>https://dancardin.github.io/projects/configly/</link>
+      <pubDate>Mon, 23 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/configly/</guid>
+      <description>A python library to simplify and centralize the loading of configuration, such as environment variables.
+# config.yml foo: bar: &amp;lt;% ENV[REQUIRED] %&amp;gt; baz: &amp;lt;% ENV[OPTIONAL, true] %&amp;gt; list_of_stuff: - fun&amp;lt;% ENV[NICE, dament] %&amp;gt;al - fun&amp;lt;% ENV[AGH, er] %&amp;gt;al # app.py config = Config.from_yaml(&amp;#39;config.yml&amp;#39;) print(config.foo.bar) print(config.foo[&amp;#39;baz&amp;#39;]) for item in config.list_of_stuff: print(item) </description>
+    </item>
+    
+    <item>
+      <title>corg</title>
+      <link>https://dancardin.github.io/projects/corg/</link>
+      <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/corg/</guid>
+      <description>A cog-like tool, written in Rust.
+Straight from Ned:
+Cog is a file generation tool. It lets you use pieces of Python code as generators in your source files to generate whatever text you need.
+Instead, Corg allows one to choose any executable (python, bash, etc) which accepts piped input. Shown below, Corg uses a shebang-looking mechanism instead.
+The most obvious motivating example which comes to mind for this tool is for keeping documentation up-to-date with their sources of truth.</description>
+    </item>
+    
+    <item>
+      <title>Python Slice Assignment</title>
+      <link>https://dancardin.github.io/wats/python-slice-assignment/</link>
+      <pubDate>Thu, 01 Dec 2022 09:05:32 -0500</pubDate>
+      
+      <guid>https://dancardin.github.io/wats/python-slice-assignment/</guid>
+      <description>&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asdf&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asdf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asdf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Python Formatting</title>
+      <link>https://dancardin.github.io/wats/python-formatting/</link>
+      <pubDate>Wed, 01 Dec 2021 09:05:32 -0500</pubDate>
+      
+      <guid>https://dancardin.github.io/wats/python-formatting/</guid>
+      <description>&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{a[&amp;#34;a&amp;#34;][&amp;#34;b&amp;#34;]}&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asdf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;***&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;KeyError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#34;a&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{a[a][b]}&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asdf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;4&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Javascript Syntax</title>
+      <link>https://dancardin.github.io/wats/javascript-oddities/</link>
+      <pubDate>Sun, 01 Aug 2021 09:05:32 -0500</pubDate>
+      
+      <guid>https://dancardin.github.io/wats/javascript-oddities/</guid>
+      <description>&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// 4
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,,].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// 5
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;mf&#34;&gt;27.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// Uncaught SyntaxError: Invalid or unexpected token
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;27.&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// &amp;#39;27&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
