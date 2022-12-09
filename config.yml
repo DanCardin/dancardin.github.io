@@ -1,0 +1,87 @@
+title: Dan Cardin
+paginate: 10
+theme: papermod
+baseURL: https://dancardin.github.io
+
+enableInlineShortcodes: true
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+enableEmoji: true
+pygmentsUseClasses: true
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+languages:
+  en:
+    languageName: "English"
+    weight: 1
+    taxonomies:
+      category: categories
+      tag: tags
+      series: series
+    menu:
+      main:
+        - name: Projects
+          url: projects
+          weight: 1
+        # - name: Posts
+        #   url: posts
+        #   weight: 2
+        - name: Wats
+          url: wats
+          weight: 3
+        - name: Tags
+          url: tags
+          weight: 10
+
+params:
+  author: Dan Cardin
+  defaultTheme: auto
+  ShowShareButtons: false
+  ShowReadingTime: true
+  displayFullLangName: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowRssButtonInSectionTermList: true
+  ShowToc: true
+  hideFooter: true
+
+  profileMode:
+    enabled: false
+    buttons:
+      - name: Archives
+        url: archives
+      - name: Tags
+        url: tags
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/dancardin"
+    - name: pypi
+      url: "https://pypi.org/user/dancardin"
+    - name: reddit
+      url: "https://reddit.com/dancardin"
+    - name: Rss
+      url: "index.xml"
+
+  assets:
+    disableHLJS: true
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    style: monokai
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON

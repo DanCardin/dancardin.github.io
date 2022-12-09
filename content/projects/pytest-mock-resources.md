@@ -1,10 +1,22 @@
-+++
-title = "Pytest Mock Resources"
-weight = 2
-template = "project.html"
+---
+title: Pytest Mock Resources
+template: projects
+link: https://github.com/schireson/pytest-mock-resources
+weight: 2
+date: 2019-01-09
+---
 
-[extra]
-no_header = true
-github = "schireson/pytest-mock-resources"
-docs = "https://pytest-mock-resources.readthedocs.io/en/latest"
-+++
+A python library which produces pytest fixtures which let you test against
+external resource (Postgres, Mongo, Redshift...) dependent code, by orchestrating
+running real instances of those services.
+
+```python
+from pytest_mock_resources import create_postgres_fixture
+from models import ModelBase
+
+pg = create_postgres_fixture(ModelBase, session=True)
+
+def test_view_function_empty_db(pg):
+  response = view_function(pg)
+  assert response == ...
+```

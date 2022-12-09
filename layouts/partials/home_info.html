@@ -1,0 +1,7 @@
+{{- with site.Params.socialIcons }}
+<article class="first-entry home-info">
+  <footer class="entry-footer" style="display: flex; justify-content: center">
+    {{ partial "social_icons.html" site.Params.socialIcons }}
+  </footer>
+</article>
+{{- end -}}
