@@ -5,7 +5,18 @@
     <link>https://dancardin.github.io/projects/</link>
     <description>Recent content in Projects on Dan Cardin</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 01 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://dancardin.github.io/projects/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Tue, 27 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://dancardin.github.io/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cappa</title>
+      <link>https://dancardin.github.io/projects/cappa/</link>
+      <pubDate>Sat, 23 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/cappa/</guid>
+      <description>Cappa Full documentation here. Comparison vs existing libraries.. Annotation inference details &amp;ldquo;invoke&amp;rdquo; (click-like) details Cappa is a declarative command line parsing library, taking much of its inspiration from the &amp;ldquo;Derive&amp;rdquo; API from the Clap written in Rust.
+from dataclasses import dataclass, field import cappa from typing import Literal from typing_extensions import Annotated @dataclass class Example: positional_arg: str = &amp;#34;optional&amp;#34; boolean_flag: bool = False single_option: Annotated[int | None, cappa.Arg(short=True, help=&amp;#34;A number&amp;#34;)] = None multiple_option: Annotated[ list[Literal[&amp;#34;one&amp;#34;, &amp;#34;two&amp;#34;, &amp;#34;three&amp;#34;]], cappa.</description>
+    </item>
+    
     <item>
       <title>SQLAlchemy Declarative Extensions</title>
       <link>https://dancardin.github.io/projects/sqlalchemy-declarative-extensions/</link>
@@ -24,6 +35,28 @@
       <guid>https://dancardin.github.io/projects/pytest-alembic/</guid>
       <description>A Pytest plugin to test alembic migrations (with default tests) and which enables you to write tests specific to your migrations.
 $ pip install pytest-alembic $ pytest --test-alembic ... ::pytest_alembic/tests/model_definitions_match_ddl &amp;lt;- . PASSED [ 25%] ::pytest_alembic/tests/single_head_revision &amp;lt;- . PASSED [ 50%] ::pytest_alembic/tests/up_down_consistency &amp;lt;- . PASSED [ 75%] ::pytest_alembic/tests/upgrade &amp;lt;- . PASSED [100%] ============================== 4 passed in 2.32s =============================== </description>
+    </item>
+    
+    <item>
+      <title>Chapter Sync</title>
+      <link>https://dancardin.github.io/projects/chapter-sync/</link>
+      <pubDate>Tue, 27 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/chapter-sync/</guid>
+      <description>A tool for recording serialized web content, in partial web-serial type novels, or other serialized content for which you want to be sent updates as they&amp;rsquo;re published.
+The other tools in the space (at least that I&amp;rsquo;m aware of: Leech, FanFicFare) are mostly designed around manual one-off usage of the tool to capture the current state of a story/series and turn it into an ebook.
+chapter-sync, by contrast, records everything it captures to a sqlite database and will only collect new/missing chapters.</description>
+    </item>
+    
+    <item>
+      <title>Dataclass Settings</title>
+      <link>https://dancardin.github.io/projects/dataclass-settings/</link>
+      <pubDate>Sun, 29 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://dancardin.github.io/projects/dataclass-settings/</guid>
+      <description>A declarative settings library
+dataclass-settings intends to work with any PEP-681-compliant dataclass-like object, including but not limited to:
+Pydantic models (v2+) dataclasses attrs classes from __future__ import annotations from dataclass_settings import load_settings, Env, Secret from pydantic import BaseModel class Example(BaseModel): env: Annotated[str, Env(&amp;#34;ENVIRONMENT&amp;#34;)] = &amp;#34;local&amp;#34; dsn: Annotated[str, Env(&amp;#34;DSN&amp;#34;), Secret(&amp;#39;dsn&amp;#39;)] = &amp;#34;dsn://&amp;#34; sub_config: SubConfig class SubConfig(BaseModel): nested: Annotated[int, Env(&amp;#34;NESTED&amp;#34;)] = &amp;#34;4&amp;#34; example: Example = load_settings(Example) # or, if you want `nested` to be `SUB_CONFIG_NESTED` example: Example = load_settings(Example, nested_delimiter=&amp;#39;_&amp;#39;) </description>
     </item>
     
     <item>

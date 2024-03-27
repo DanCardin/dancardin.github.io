@@ -5,9 +5,10 @@
     <link>https://dancardin.github.io/tags/</link>
     <description>Recent content in Tags on Dan Cardin</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 01 Dec 2022 09:05:32 -0500</lastBuildDate><atom:link href="https://dancardin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>python</title>
+      <title>Python</title>
       <link>https://dancardin.github.io/tags/python/</link>
       <pubDate>Thu, 01 Dec 2022 09:05:32 -0500</pubDate>
       
@@ -16,7 +17,7 @@
     </item>
     
     <item>
-      <title>wat</title>
+      <title>Wat</title>
       <link>https://dancardin.github.io/tags/wat/</link>
       <pubDate>Thu, 01 Dec 2022 09:05:32 -0500</pubDate>
       
@@ -25,7 +26,7 @@
     </item>
     
     <item>
-      <title>javascript</title>
+      <title>Javascript</title>
       <link>https://dancardin.github.io/tags/javascript/</link>
       <pubDate>Sun, 01 Aug 2021 09:05:32 -0500</pubDate>
       
