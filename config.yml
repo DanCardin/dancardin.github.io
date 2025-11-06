@@ -1,5 +1,4 @@
 title: Dan Cardin
-paginate: 10
 theme: papermod
 baseURL: https://dancardin.github.io
 
@@ -15,6 +14,9 @@ minify:
   disableXML: true
   minifyOutput: true
 
+pagination:
+  pageSize: 10
+
 languages:
   en:
     languageName: "English"
@@ -28,9 +30,9 @@ languages:
         - name: Projects
           url: projects
           weight: 1
-        # - name: Posts
-        #   url: posts
-        #   weight: 2
+        - name: Posts
+          url: posts
+          weight: 2
         - name: Wats
           url: wats
           weight: 3
@@ -48,6 +50,7 @@ params:
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
   ShowRssButtonInSectionTermList: true
+  disableSpecial1stPost: true
   ShowToc: true
   hideFooter: true
 
